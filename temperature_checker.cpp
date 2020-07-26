@@ -22,6 +22,7 @@ int main(int argc, char **argv){
 		printf("invalid argument: tmchk needs 3 cmd arguments\nusage:\n tmchk [sampling_rate(int/sec)] [logging_time(int/min)] [output png_path(full_path) ]\nerror code 1:first argument need [int/sec]\n return -1\n");
 		return -1;
 		}
+	file_clean();
 	time= time*60;
 	sprintf(buf2,argv[3]);
 	printf("\noutput file path -> %s\n\n",buf2);
@@ -45,17 +46,17 @@ int main(int argc, char **argv){
 	fprintf(file, "set ytics 10\n");
 	fprintf(file, "set ylabel \"temperature(deg)\" offset 2,0 textcolor rgb \"red\"\n");
 	fprintf(file, "set title \"System Performance\"\n");
-	fprintf(file, "plot \'/tmp/data.thu\' using 1:2 with linespoints lt rgb \'red\'\n");
+	fprintf(file, "plot \'/tmp/data.thu\' using 1:2 with lines lt rgb \'red\'\n");
 	fprintf(file, "set ytics 10\n");
 	fprintf(file, "set yrange [0:100]\n");
 	fprintf(file, "set ytics offset -5,0\n");
 	fprintf(file, "set ylabel \"CPU usage (%%)\" offset -3,0 textcolor rgb \"blue\"\n");
-	fprintf(file, "plot \'/tmp/data.thu\' using 1:3 with linespoints lt rgb \'blue\'\n");
+	fprintf(file, "plot \'/tmp/data.thu\' using 1:3 with lines lt rgb \'blue\'\n");
 	fprintf(file, "set ytics 250\n");
 	fprintf(file, "set yrange [0:2500]\n");
 	fprintf(file, "set ytics offset -10,0\n");
 	fprintf(file, "set ylabel \"CPU frequency (MHz)\" offset -8,0 textcolor rgb \"green\"\n");
-	fprintf(file, "plot \'/tmp/data.thu\' using 1:4 with linespoints lt rgb \'green\'\n");
+	fprintf(file, "plot \'/tmp/data.thu\' using 1:4 with lines lt rgb \'green\'\n");
 	fprintf(file, "unset terminal\n");
 	fprintf(file, "unset multiplot\n");
 	fprintf(file, "exit\n");
