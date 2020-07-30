@@ -1,3 +1,6 @@
+# For Japanese
+日本語の説明はここに書いています。
+
 
 # What is tmchk?
 This is only for Raspbian(Raspberry Pi OS).
@@ -35,4 +38,4 @@ make clean
 tmchk 3 3 /home/pi/test.png
 ```
 Execution result is below.
-
+![rectest](https://user-images.githubusercontent.com/39953146/88944630-f04b1a00-d2c7-11ea-9461-be4a8b2fb425.png)
