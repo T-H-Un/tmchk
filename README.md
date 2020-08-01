@@ -1,6 +1,6 @@
 # For Japanese
 日本語の説明は以下に書いています。英語の説明は最小限です。
-https://thunsukevpn.clear-net.jp/index.php/blog/thun-tmchk-explanation/
+https://www.thunsuke.com/index.php/blog/thun-tmchk-explanation/
 
 
 # What is tmchk?
