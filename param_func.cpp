@@ -144,7 +144,7 @@ void CPU_freq_graph(char *name,int time){
 	fprintf(file, "unset key\n");
 	fprintf(file, "set xrange [0:%d]\n",time);
 	fprintf(file, "set xlabel \"time(sec)\"\n");
-	fprintf(file, "set title \"CPU clock\"\n");
+	fprintf(file, "set title \"CPU frequency\"\n");
 	fprintf(file, "set ytics 250\n");
 	fprintf(file, "set yrange [0:2505]\n");
 	fprintf(file, "set ylabel \"CPU frequency (MHz)\" textcolor rgb \"green\"\n");
