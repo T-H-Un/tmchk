@@ -103,6 +103,80 @@ double ARMclock(){
 }
 
 #endif
+char *separate_basenamed(char *argv){
+	char buf[2048];
+	strcpy(buf,argv);
+	buf[strlen(buf)-3]='\0';
+	argv=(char*)buf;
+	return argv;
+}
+
+void CPU_temp_graph(char *name,int time){
+	FILE *file;
+	
+	printf("start gnuplot : CPU temperature graph\n");
+	file = popen("gnuplot\n","w");
+	fprintf(file, "set terminal png size 1280,720\n");
+	fprintf(file, "set output \"%s\"\n",name);
+	fprintf(file, "set multiplot\n");
+	fprintf(file, "unset key\n");
+	fprintf(file, "set xrange [0:%d]\n",time);
+	fprintf(file, "set xlabel \"time(sec)\"\n");
+	fprintf(file, "set yrange [0:100.2]\n");
+	fprintf(file, "set ytics 10\n");
+	fprintf(file, "set ylabel \"temperature(deg)\" textcolor rgb \"red\"\n");
+	fprintf(file, "set title \"CPU temperature\"\n");
+	fprintf(file, "plot \'/tmp/data.thu\' using 1:2 with lines lt rgb \'red\'\n");
+	fprintf(file, "unset terminal\n");
+	fprintf(file, "unset multiplot\n");
+	fprintf(file, "exit\n");
+	pclose(file);
+	}
+	
+void CPU_freq_graph(char *name,int time){
+	FILE *file;
+	
+	printf("start gnuplot : CPU clock graph\n");
+	file = popen("gnuplot\n","w");
+	fprintf(file, "set terminal png size 1280,720\n");
+	fprintf(file, "set output \"%s\"\n",name);
+	fprintf(file, "set multiplot\n");
+	fprintf(file, "unset key\n");
+	fprintf(file, "set xrange [0:%d]\n",time);
+	fprintf(file, "set xlabel \"time(sec)\"\n");
+	fprintf(file, "set title \"CPU clock\"\n");
+	fprintf(file, "set ytics 250\n");
+	fprintf(file, "set yrange [0:2505]\n");
+	fprintf(file, "set ylabel \"CPU frequency (MHz)\" textcolor rgb \"green\"\n");
+	fprintf(file, "plot \'/tmp/data.thu\' using 1:4 with lines lt rgb \'green\'\n");
+	fprintf(file, "unset terminal\n");
+	fprintf(file, "unset multiplot\n");
+	fprintf(file, "exit\n");
+	pclose(file);
+}	
+
+void CPU_usage_graph(char *name,int time){
+	FILE *file;
+	
+	printf("start gnuplot : CPU usage graph\n");
+	file = popen("gnuplot\n","w");
+	fprintf(file, "set terminal png size 1280,720\n");
+	fprintf(file, "set output \"%s\"\n",name);
+	fprintf(file, "set multiplot\n");
+	fprintf(file, "unset key\n");
+	fprintf(file, "set xrange [0:%d]\n",time);
+	fprintf(file, "set xlabel \"time(sec)\"\n");
+	fprintf(file, "set title \"CPU usage\"\n");
+	fprintf(file, "set ytics 10\n");
+	fprintf(file, "set yrange [0:100.2]\n");
+	fprintf(file, "set ylabel \"CPU usage (%%)\" textcolor rgb \"blue\"\n");
+	fprintf(file, "plot \'/tmp/data.thu\' using 1:3 with lines lt rgb \'blue\'\n");
+	fprintf(file, "unset terminal\n");
+	fprintf(file, "unset multiplot\n");
+	fprintf(file, "exit\n");
+	pclose(file);
+}
+
 void datalog(int a){
 	FILE *file;
 	file = fopen("/tmp/data.thu", "a");
@@ -113,3 +187,37 @@ void datalog(int a){
 	fprintf(file,"%d %.2f %d %.2f\n",a,temperature(),use_rate(),ARMclock());
 	fclose(file);
 }
+
+void make_std_graph(char *argv,int time){
+	FILE *file;
+	
+	printf("start gnuplot : All System performance\n");
+	file = popen("gnuplot\n","w");
+	fprintf(file, "set terminal png size 1280,720\n");
+	fprintf(file, "set output \"%s\"\n",argv);
+	fprintf(file, "set multiplot\n");
+	fprintf(file, "unset key\n");
+	fprintf(file, "set xrange [0:%d]\n",time);
+	fprintf(file, "set xlabel \"time(sec)\"\n");
+	fprintf(file, "set lmargin screen 0.15\n");
+	fprintf(file, "set yrange [0:100.2]\n");
+	fprintf(file, "set ytics 10\n");
+	fprintf(file, "set ylabel \"temperature(deg)\" offset 2,0 textcolor rgb \"red\"\n");
+	fprintf(file, "set title \"System Performance\"\n");
+	fprintf(file, "plot \'/tmp/data.thu\' using 1:2 with lines lt rgb \'red\'\n");
+	fprintf(file, "set ytics 10\n");
+	fprintf(file, "set yrange [0:100.2]\n");
+	fprintf(file, "set ytics offset -5,0\n");
+	fprintf(file, "set ylabel \"CPU usage (%%)\" offset -3,0 textcolor rgb \"blue\"\n");
+	fprintf(file, "plot \'/tmp/data.thu\' using 1:3 with lines lt rgb \'blue\'\n");
+	fprintf(file, "set ytics 250\n");
+	fprintf(file, "set yrange [0:2505]\n");
+	fprintf(file, "set ytics offset -10,0\n");
+	fprintf(file, "set ylabel \"CPU frequency (MHz)\" offset -8,0 textcolor rgb \"green\"\n");
+	fprintf(file, "plot \'/tmp/data.thu\' using 1:4 with lines lt rgb \'green\'\n");
+	fprintf(file, "unset terminal\n");
+	fprintf(file, "unset multiplot\n");
+	fprintf(file, "exit\n");
+	pclose(file);
+	
+	}
