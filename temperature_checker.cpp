@@ -12,7 +12,7 @@ int main(int argc, char **argv){
 	char buf[4096];
 	char buf2[2048];
 	
-	printf("\ntmchk ver. 0.02a powerd by T-H-Un\n");
+	printf("\ntmchk ver. 0.02b powerd by T-H-Un\n");
 	if(argc!=4&&argc!=5){
 		printf("Error code 1 :unexpected figure of arguments: tmchk needs 3 or 4 cmd arguments\nusage:\n tmchk [sampling_rate(int/sec)] [logging_time(int/min)] [output png_path(full_path) ] (--separate)\n");
 		return -1;
