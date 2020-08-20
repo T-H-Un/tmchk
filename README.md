@@ -46,3 +46,18 @@ tmchk 3 3 /home/pi/test.png
 ```
 Execution result is below.
 ![rectest](https://user-images.githubusercontent.com/39953146/88944630-f04b1a00-d2c7-11ea-9461-be4a8b2fb425.png)
+
+Use "--separate" option
+```
+tmchk 1 1 /home/pi/test.png --separate
+```
+![test002a-2 _CPU_frequency](https://user-images.githubusercontent.com/39953146/90794248-88787400-e347-11ea-8fb6-468bbe67fa7a.png)
+CPU frequency graph
+![test002a-2 _CPU_temperature](https://user-images.githubusercontent.com/39953146/90794253-89110a80-e347-11ea-8c3b-ef052b98be61.png)
+CPU temperature graph
+![test002a-2 _CPU_usage](https://user-images.githubusercontent.com/39953146/90794254-89a9a100-e347-11ea-8b3b-d40492b5d4fc.png)
+CPU usage graph
+![test002a-1](https://user-images.githubusercontent.com/39953146/90794258-89a9a100-e347-11ea-980c-4dfe2d356bae.png)
+All system performance graph
+
+
