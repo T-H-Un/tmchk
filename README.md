@@ -13,8 +13,13 @@ This tool is possible to check such system performance.
 # Usage
 usage is very easy. This is syntax of tmchk.
 ```
-tmchk [sampling rate(int/sec)] [logging time(int,min)] [full path of putput png file]
+tmchk [sampling rate(int/sec)] [logging time(int,min)] [full path of putput png file] (--separate)
 ```
+If you use the "--separate" option, can get 4 graphs below(If don't use "--separate" option, you can get below only one 4.graph).
+1. CPU temperature graph
+2. CPU frequency graph
+3. CPU usage graph
+4.  with the above 3 parameters, drawing on one graph (same as ver0.01)
 # Dependent package
 tmchk is need 2 package.
 ```
