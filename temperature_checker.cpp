@@ -62,7 +62,7 @@ int main(int argc, char **argv){
 	p=(char*)buf;
 	CPU_freq_graph(p,rate*i);
 	make_std_graph(argv[3],rate*i);
-	printf("\noutput 4 graphs/n Bye.\n");
+	printf("\noutput 4 graphsn Bye.\n");
 	}
 	sleep(1);
 	file_clean();
