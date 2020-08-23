@@ -7,7 +7,7 @@ https://www.thunsuke.com/index.php/blog/thun-tmchk-explanation/
 # What is tmchk?
 This is only for Raspbian(Raspberry Pi OS).
 tmchk is logging your Raspbery Pi system performance and output to graph.
-It have 3 parameter : 1,Temperature(deg, Max 100 deg.) 2,CPU frequency(MHz,Max 2500MHx) 3, CPU_usage(%,Max 100)
+It have 3 parameter : 1,Temperature(deg, Max 100 deg.) 2,CPU frequency(MHz,Max 2500MHz) 3, CPU_usage(%,Max 100)
 This tool is possible to check such system performance.
 
 # Usage
