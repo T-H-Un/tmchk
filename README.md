@@ -39,6 +39,14 @@ make
 sudo make install
 make clean
 ```
+# Uninstall
+```
+sudo rm /url/local/bin/tmchk
+```
+If you installed gnuplot with tmchk , run below command.
+```
+sudo apt-get remove -y --purge gnuplot
+```
 
 # Example 
 ```
