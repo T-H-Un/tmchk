@@ -12,7 +12,7 @@ int main(int argc, char **argv){
 	char buf[4096];
 	char buf2[2048];
 	
-	printf("\ntmchk ver. 0.02b powerd by T-H-Un\n");
+	printf("\ntmchk ver. 0.03a powerd by T-H-Un\n");
 	if(argc!=4&&argc!=5){
 		printf("Error code 1 :unexpected figure of arguments: tmchk needs 3 or 4 cmd arguments\nusage:\n tmchk [sampling_rate(int/sec)] [logging_time(int/min)] [output png_path(full_path) ] (--separate)\n");
 		return -1;
@@ -31,6 +31,7 @@ int main(int argc, char **argv){
 		return -1;
 		}
 	file_clean();
+	
 	time= time*60;
 	sprintf(buf2,argv[3]);
 	if(buf2[0]!='/'){
@@ -48,7 +49,7 @@ int main(int argc, char **argv){
 	printf("\nend writing -> /tmp/data.thu\n");
 	if(argc==4){
 	make_std_graph(argv[3],rate*i);
-	printf("\noutput 1 graph\nBye.");
+	printf("\noutput 1 graph and data csv file. \noutput directory => %s \nBye.\n",result_dir(argv[3]));
 	}
 	
 	if(argc==5){
@@ -62,8 +63,9 @@ int main(int argc, char **argv){
 	p=(char*)buf;
 	CPU_freq_graph(p,rate*i);
 	make_std_graph(argv[3],rate*i);
-	printf("\noutput 4 graphsn Bye.\n");
+	printf("\noutput 4 graphs and data csv file.\noutput directory => %s \n Bye.\n",result_dir(argv[3]));
 	}
+	output_csv(argv[3]);
 	sleep(1);
 	file_clean();
 	return 0;

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#define RASPBIAN //if you use on not raspbian, please comment out this line.
+#define RASPBIAN
 double temperature(){
 	
 	FILE* file;
@@ -75,7 +75,7 @@ char *result_name(char *a){
 void file_clean(){
 	remove("/tmp/top.thu");
 	remove("/tmp/clock.thu");
-	remove("/tmp/data.thu");
+	remove("/tmp/data.csv");
 }
 
 
@@ -116,6 +116,7 @@ void CPU_temp_graph(char *name,int time){
 	
 	printf("start gnuplot : CPU temperature graph\n");
 	file = popen("gnuplot\n","w");
+	fprintf(file, "set datafile separator \",\"\n");
 	fprintf(file, "set terminal png size 1280,720\n");
 	fprintf(file, "set output \"%s\"\n",name);
 	fprintf(file, "set multiplot\n");
@@ -126,7 +127,7 @@ void CPU_temp_graph(char *name,int time){
 	fprintf(file, "set ytics 10\n");
 	fprintf(file, "set ylabel \"temperature(deg)\" textcolor rgb \"red\"\n");
 	fprintf(file, "set title \"CPU temperature\"\n");
-	fprintf(file, "plot \'/tmp/data.thu\' using 1:2 with lines lt rgb \'red\'\n");
+	fprintf(file, "plot \'/tmp/data.csv\' using 1:2 with lines lt rgb \'red\'\n");
 	fprintf(file, "unset terminal\n");
 	fprintf(file, "unset multiplot\n");
 	fprintf(file, "exit\n");
@@ -138,6 +139,7 @@ void CPU_freq_graph(char *name,int time){
 	
 	printf("start gnuplot : CPU clock graph\n");
 	file = popen("gnuplot\n","w");
+	fprintf(file, "set datafile separator \",\"\n");
 	fprintf(file, "set terminal png size 1280,720\n");
 	fprintf(file, "set output \"%s\"\n",name);
 	fprintf(file, "set multiplot\n");
@@ -148,7 +150,7 @@ void CPU_freq_graph(char *name,int time){
 	fprintf(file, "set ytics 250\n");
 	fprintf(file, "set yrange [0:2505]\n");
 	fprintf(file, "set ylabel \"CPU frequency (MHz)\" textcolor rgb \"green\"\n");
-	fprintf(file, "plot \'/tmp/data.thu\' using 1:4 with lines lt rgb \'green\'\n");
+	fprintf(file, "plot \'/tmp/data.csv\' using 1:4 with lines lt rgb \'green\'\n");
 	fprintf(file, "unset terminal\n");
 	fprintf(file, "unset multiplot\n");
 	fprintf(file, "exit\n");
@@ -160,6 +162,7 @@ void CPU_usage_graph(char *name,int time){
 	
 	printf("start gnuplot : CPU usage graph\n");
 	file = popen("gnuplot\n","w");
+	fprintf(file, "set datafile separator \",\"\n");
 	fprintf(file, "set terminal png size 1280,720\n");
 	fprintf(file, "set output \"%s\"\n",name);
 	fprintf(file, "set multiplot\n");
@@ -170,7 +173,7 @@ void CPU_usage_graph(char *name,int time){
 	fprintf(file, "set ytics 10\n");
 	fprintf(file, "set yrange [0:100.2]\n");
 	fprintf(file, "set ylabel \"CPU usage (%%)\" textcolor rgb \"blue\"\n");
-	fprintf(file, "plot \'/tmp/data.thu\' using 1:3 with lines lt rgb \'blue\'\n");
+	fprintf(file, "plot \'/tmp/data.csv\' using 1:3 with lines lt rgb \'blue\'\n");
 	fprintf(file, "unset terminal\n");
 	fprintf(file, "unset multiplot\n");
 	fprintf(file, "exit\n");
@@ -179,13 +182,32 @@ void CPU_usage_graph(char *name,int time){
 
 void datalog(int a){
 	FILE *file;
-	file = fopen("/tmp/data.thu", "a");
+	file = fopen("/tmp/data.csv", "a");
 	if(file==NULL){
 		printf("Can't open(or make) data.thu\nPlease check directory and permission./n");
 	}
 	printf("time=%d\ntemperature=%.2f(deg),  CPU_usage=%d(%%),  ARMclock=%.2f(MHz)\n",a,temperature(),use_rate(),ARMclock());
-	fprintf(file,"%d %.2f %d %.2f\n",a,temperature(),use_rate(),ARMclock());
+	fprintf(file,"%d,%.2f,%d,%.2f\n",a,temperature(),use_rate(),ARMclock());
 	fclose(file);
+}
+
+void output_csv(char *argv){
+	FILE *csv;
+	FILE *data;
+	char buf[1024];
+	char log[128];
+	strcpy(buf,argv);
+	buf[strlen(buf)-3]='\0';
+	strcat(buf,"csv");
+	remove(buf);
+	csv = fopen(buf,"a");
+	data = fopen("/tmp/data.csv","r");
+	fprintf(csv,"time,CPU_temperature,CPU_usage,CPU_frequency\n");
+	 while((fgets(log,128,data))!=NULL){
+		fprintf(csv,log);
+	}
+	fclose(csv);
+	fclose(data);
 }
 
 void make_std_graph(char *argv,int time){
@@ -193,6 +215,7 @@ void make_std_graph(char *argv,int time){
 	
 	printf("start gnuplot : All System performance\n");
 	file = popen("gnuplot\n","w");
+	fprintf(file, "set datafile separator \",\"\n");
 	fprintf(file, "set terminal png size 1280,720\n");
 	fprintf(file, "set output \"%s\"\n",argv);
 	fprintf(file, "set multiplot\n");
@@ -204,17 +227,17 @@ void make_std_graph(char *argv,int time){
 	fprintf(file, "set ytics 10\n");
 	fprintf(file, "set ylabel \"temperature(deg)\" offset 2,0 textcolor rgb \"red\"\n");
 	fprintf(file, "set title \"System Performance\"\n");
-	fprintf(file, "plot \'/tmp/data.thu\' using 1:2 with lines lt rgb \'red\'\n");
+	fprintf(file, "plot \'/tmp/data.csv\' using 1:2 with lines lt rgb \'red\'\n");
 	fprintf(file, "set ytics 10\n");
 	fprintf(file, "set yrange [0:100.2]\n");
 	fprintf(file, "set ytics offset -5,0\n");
 	fprintf(file, "set ylabel \"CPU usage (%%)\" offset -3,0 textcolor rgb \"blue\"\n");
-	fprintf(file, "plot \'/tmp/data.thu\' using 1:3 with lines lt rgb \'blue\'\n");
+	fprintf(file, "plot \'/tmp/data.csv\' using 1:3 with lines lt rgb \'blue\'\n");
 	fprintf(file, "set ytics 250\n");
 	fprintf(file, "set yrange [0:2505]\n");
 	fprintf(file, "set ytics offset -10,0\n");
 	fprintf(file, "set ylabel \"CPU frequency (MHz)\" offset -8,0 textcolor rgb \"green\"\n");
-	fprintf(file, "plot \'/tmp/data.thu\' using 1:4 with lines lt rgb \'green\'\n");
+	fprintf(file, "plot \'/tmp/data.csv\' using 1:4 with lines lt rgb \'green\'\n");
 	fprintf(file, "unset terminal\n");
 	fprintf(file, "unset multiplot\n");
 	fprintf(file, "exit\n");
