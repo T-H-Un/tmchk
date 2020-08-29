@@ -13,5 +13,8 @@ char *separate_basenamed(char*);
 void CPU_temp_graph(char*,int);
 void CPU_usage_graph(char*,int);
 void CPU_freq_graph(char*,int);
+int judge_opt(char*,int);
+void help_option();
+void make_separate_graph(char*,int);
 
 #endif

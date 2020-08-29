@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#define RASPBIAN
+#define RASPBIAN 
 double temperature(){
 	
 	FILE* file;
@@ -208,6 +208,7 @@ void output_csv(char *argv){
 	}
 	fclose(csv);
 	fclose(data);
+	printf("output csv file. \noutput directory => %s \n ",result_dir(argv));
 }
 
 void make_std_graph(char *argv,int time){
@@ -244,3 +245,62 @@ void make_std_graph(char *argv,int time){
 	pclose(file);
 	
 	}
+	
+void make_separate_graph(char *argv,int rate){
+	char buf[4096];
+	char *p;
+	sprintf(buf,"%s_CPU_temperature.png",separate_basenamed(argv));
+	p=(char*)buf;
+	CPU_temp_graph(p,rate);
+	sprintf(buf,"%s_CPU_usage.png",separate_basenamed(argv));
+	p=(char*)buf;
+	CPU_usage_graph(p,rate);
+	sprintf(buf,"%s_CPU_frequency.png",separate_basenamed(argv));
+	p=(char*)buf;
+	CPU_freq_graph(p,rate);
+	make_std_graph(argv,rate);
+	printf("\noutput 4 graphs.\noutput directory => %s \n",result_dir(argv));
+}
+	
+int judge_opt(char* argv,int flag){
+		if(strcmp(argv,"--separate")==0){// flag 1
+		printf(" --separate");
+		if(flag==0)
+		flag=1;
+		else if(flag==1)
+		flag=2583;
+		else if(flag==2)
+		flag=12;
+		else if(flag==3)
+		flag=3;
+		else if(flag==23)
+		flag=3;
+		}
+		else if(strcmp(argv,"--nocsv")==0){//flag 2
+		printf(" --nocsv");
+		if(flag==0)
+		flag=2;
+		else if(flag==1)
+		flag=12;
+		else if(flag==2)
+		flag=2583;
+		else if(flag==3)
+		flag=3;
+		}
+		else if(strcmp(argv,"--nograph")==0){ //flag 3
+		printf(" --nograph");
+		if(flag!=3)
+		flag=3;
+		else{
+		flag=2583;
+		}
+	}
+	// flag 1 2 3 12 2583
+	return flag;
+}
+void help_option(){
+	printf("\nusage:\n tmchk [sampling_rate(int/sec)] [logging_time(int/min)] [output png_path(full_path) ] (--options)\n");
+	printf("\nOptions\n--separate : Create one graph for one parameter.\n");
+	printf("--nocsv : Don't output CSV file.\n");
+	printf("--nograph : Don't create graphs.\n");
+}
