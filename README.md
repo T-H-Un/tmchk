@@ -23,9 +23,10 @@ If you use the "--separate" option, can get 4 graphs below(If don't use "--separ
 
 "--nograph" option is not output PNG files.
 "--nocsv" option is not output CSV file.
-
-On ver0.03, support .csv data file output.
-This function is default and can't choose output or not output.
+This command can be saw helps.It return usage and options.
+```
+tmchk --help
+```
 # Dependent package
 tmchk is need 2 package.
 ```
