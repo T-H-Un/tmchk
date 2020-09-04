@@ -23,6 +23,10 @@ If you use the "--separate" option, can get 4 graphs below(If don't use "--separ
 
 "--nograph" option is not output PNG files.
 "--nocsv" option is not output CSV file.
+"--realtime_temp" is drawing CPU temperature graph on real time.
+"--realtime_usage" is drawing CPU usage graph on real time
+"--realtime_freq" is drawing CPU frequency graph on real time
+"--realtime_all" is drawing CPU temperature, usage and frequnecy graphs on realtime.
 This command can be saw helps.It return usage and options.
 ```
 tmchk --help
