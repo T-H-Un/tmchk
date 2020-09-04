@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #define RASPBIAN 
+
 double temperature(){
 	
 	FILE* file;
@@ -19,15 +20,12 @@ double temperature(){
 	
 int use_rate(){
 	FILE *file;
-	char cmd[]="top -b -n 1 > /tmp/top.thu";
 	char buffer[1024];
 	char buf[128];
 	char *pcmd;
 	int i=1;
 	int c=0;	
-	pcmd=(char*)cmd;
-	system(pcmd);
-	file=fopen("/tmp/top.thu","r");
+	file=popen("top -b -n 1","r");
 	if (file==NULL){return -1;}
 	while(fgets(buffer, 1024, file) != NULL){
 		if(i==3){
@@ -43,7 +41,7 @@ int use_rate(){
 		else{}
 		i++;
 	}
-	fclose(file);
+	pclose(file);
 	int num=atoi(buf);
 	int per=100-num;
 	return per;
@@ -73,26 +71,24 @@ char *result_name(char *a){
 }
 
 void file_clean(){
-	remove("/tmp/top.thu");
-	remove("/tmp/clock.thu");
 	remove("/tmp/data.csv");
+	remove("/tmp/rttemp.cmd");
+	remove("/tmp/rtusage.cmd");
+	remove("/tmp/rtfreq.cmd");
 }
 
 
 #ifdef RASPBIAN
 double ARMclock(){
 	FILE *file;
-	char cmd[]="vcgencmd measure_clock arm > /tmp/clock.thu";
 	char buffer[128];
 	char buf[128];
 	char *pcmd;	
 	
-	pcmd=(char*)cmd;
-	system(pcmd);
-	file=fopen("/tmp/clock.thu","r");
+	file=popen("vcgencmd measure_clock arm","r");
 	if (file==NULL){return -1;}
 	fgets(buffer, 128, file);
-	fclose(file);
+	pclose(file);
 	buffer[strlen(buffer)-1]='\0';	
 	pcmd = strtok(buffer, "=");
 	pcmd = strtok(NULL, "=");
@@ -261,46 +257,159 @@ void make_separate_graph(char *argv,int rate){
 	make_std_graph(argv,rate);
 	printf("\noutput 4 graphs.\noutput directory => %s \n",result_dir(argv));
 }
-	
+
+
+
 int judge_opt(char* argv,int flag){
 		if(strcmp(argv,"--separate")==0){// flag 1
-		printf(" --separate");
-		if(flag==0)
-		flag=1;
-		else if(flag==1)
-		flag=2583;
-		else if(flag==2)
-		flag=12;
-		else if(flag==3)
-		flag=3;
-		else if(flag==23)
-		flag=3;
+			printf(" --separate");
+			if(flag==0)
+				flag=1;
+			else if(flag==1)
+				flag=2583;
+			else if(flag==2)
+				flag=12;
+			else if(flag==3)
+				flag=3;
+			else if(flag==23)
+				flag=3;
 		}
 		else if(strcmp(argv,"--nocsv")==0){//flag 2
-		printf(" --nocsv");
-		if(flag==0)
-		flag=2;
-		else if(flag==1)
-		flag=12;
-		else if(flag==2)
-		flag=2583;
-		else if(flag==3)
-		flag=3;
+			printf(" --nocsv");
+			if(flag==0)
+				flag=2;
+			else if(flag==1)
+				flag=12;
+			else if(flag==2)
+				flag=2583;
+			else if(flag==3)
+				flag=3;
 		}
 		else if(strcmp(argv,"--nograph")==0){ //flag 3
-		printf(" --nograph");
-		if(flag!=3)
-		flag=3;
-		else{
-		flag=2583;
+			printf(" --nograph");
+			if(flag!=3)
+				flag=3;
+			else if(flag==93)
+				flag=93;
+			else{
+			flag=2583;
+			}	
 		}
-	}
-	// flag 1 2 3 12 2583
+		else if(strcmp(argv,"--realtime_all")==0){
+			printf(" --realtime_all");
+		}
+		else if(strcmp(argv,"--realtime_temp")==0){
+			printf(" --realtime_temp");
+		}
+		else if(strcmp(argv,"--realtime_usage")==0){
+			printf(" --realtime_usage");
+		}
+		else if(strcmp(argv,"--realtime_freq")==0){
+			printf(" --realtime_freq");
+		}
+		else{
+			flag=93;
+		}
+	// flag 1 2 3 12 93 2583
 	return flag;
 }
+
+int judge_rt(char* argv,int rt_flag){	//All=1000 -> 8, temperature = 0100 -> 4 usage = 0010 -> 2 , freq = 0001 -> 1
+	 if(strcmp(argv,"--realtime_all")==0){
+		if(rt_flag==0)
+		rt_flag=8;
+		else if(rt_flag!=0&&rt_flag<8)
+		rt_flag=93;
+		else
+		rt_flag=2583;
+	}
+	else if(strcmp(argv,"--realtime_temp")==0){
+		if(rt_flag==0)
+		rt_flag=4;
+		else if(rt_flag==1)
+		rt_flag=5;
+		else if(rt_flag==2)
+		rt_flag=6;
+		else if(rt_flag==3)
+		rt_flag=7;
+		else if(rt_flag==8)
+		rt_flag=93;
+		else if(rt_flag==93)
+		;
+		else
+		rt_flag=2583;
+	}
+	else if(strcmp(argv,"--realtime_usage")==0){
+		if(rt_flag==0)
+		rt_flag=2;
+		else if(rt_flag==4)
+		rt_flag=6;
+		else if(rt_flag==1)
+		rt_flag=3;
+		else if(rt_flag==5)
+		rt_flag=7;
+		else if(rt_flag==8)
+		rt_flag=93;
+		else if(rt_flag==93)
+		;
+		else
+		rt_flag=2583;
+	}
+	else if(strcmp(argv,"--realtime_freq")==0){
+		if(rt_flag==0)
+		rt_flag=1;
+		else if(rt_flag==4)
+		rt_flag=5;
+		else if(rt_flag==2)
+		rt_flag=3;
+		else if(rt_flag==6)
+		rt_flag=7;
+		else if(rt_flag==8)
+		rt_flag=93;
+		else if(rt_flag==93)
+		;
+		else
+		rt_flag=2583;
+	}
+	else;
+	return rt_flag;
+}
+
 void help_option(){
 	printf("\nusage:\n tmchk [sampling_rate(int/sec)] [logging_time(int/min)] [output png_path(full_path) ] (--options)\n");
 	printf("\nOptions\n--separate : Create one graph for one parameter.\n");
 	printf("--nocsv : Don't output CSV file.\n");
 	printf("--nograph : Don't create graphs.\n");
+	printf("--realtime_all : Drawing 3 realtime graphs(CPU temperature,CPU usage,CPU frequency)\n");
+	printf("--realtime_temp : Drawing realtime graph about CPU temperature.\n");
+	printf("--realtime_usage : Drawing realtime graph about CPU usage.\n");
+	printf("--realtime_freq : Drawing realtime graph about CPU frequency.\n");
+}
+
+void realtime_temp_graph(int rate){
+	FILE *gnuplot;
+	gnuplot = fopen("/tmp/rttemp.cmd","a");
+	fprintf(gnuplot,"set datafile separator \",\"\nunset key\nset xlabel \"time(sec)\"\nset yrange [0:100.2]\nset ylabel \"temperature(deg)\" textcolor rgb \"red\"\nset title \"CPU temperature\"\nplot \'/tmp/data.csv\' using 1:2 with lines lt rgb \'red\'\npause %d\nreread\n",rate);
+	fclose(gnuplot);
+	sleep(rate);
+	gnuplot=popen("gnuplot /tmp/rttemp.cmd", "w"); 
+	pclose(gnuplot);
+}
+void realtime_usage_graph(int rate){
+	FILE *gnuplot;
+	gnuplot = fopen("/tmp/rtusage.cmd","a");
+	fprintf(gnuplot,"set datafile separator \",\"\nunset key\nset xlabel \"time(sec)\"\nset yrange [0:100.2]\nset ylabel \"usege(%%)\" textcolor rgb \"blue\"\nset title \"CPU usage\"\nplot \'/tmp/data.csv\' using 1:3 with lines lt rgb \'blue\'\npause %d\nreread\n",rate);
+	fclose(gnuplot);
+	sleep(rate);
+	gnuplot=popen("gnuplot /tmp/rtusage.cmd", "w"); 
+	pclose(gnuplot);
+}
+void realtime_freq_graph(int rate){
+	FILE *gnuplot;
+	gnuplot = fopen("/tmp/rtfreq.cmd","a");
+	fprintf(gnuplot,"set datafile separator \",\"\nunset key\nset xlabel \"time(sec)\"\nset yrange [0:2500]\nset ylabel \"frequency(MHz)\" textcolor rgb \"green\"\nset title \"CPU frequency\"\nplot \'/tmp/data.csv\' using 1:4 with lines lt rgb \'green\'\npause %d\nreread\n",rate);
+	fclose(gnuplot);
+	sleep(rate);
+	gnuplot=popen("gnuplot /tmp/rtfreq.cmd", "w"); 
+	pclose(gnuplot);
 }

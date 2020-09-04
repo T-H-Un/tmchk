@@ -14,7 +14,11 @@ void CPU_temp_graph(char*,int);
 void CPU_usage_graph(char*,int);
 void CPU_freq_graph(char*,int);
 int judge_opt(char*,int);
+int judge_rt(char*,int);
 void help_option();
 void make_separate_graph(char*,int);
+void realtime_temp_graph(int);
+void realtime_usage_graph(int);
+void realtime_freq_graph(int);
 
 #endif
