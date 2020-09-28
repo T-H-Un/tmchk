@@ -1,7 +1,7 @@
 # For Japanese
 Raspberry Piの温度、CPU使用率、動作周波数をグラフ化します。
 日本語の説明は以下のリンクに書いています。ここにある英語の説明は最小限です。
-https://www.thunsuke.com/index.php/blog/thun-tmchk-explanation/
+https://www.thun-techblog.com/index.php/blog/thun-tmchk-explanation/
 
 
 # What is tmchk?
