@@ -1,6 +1,7 @@
 # For Japanese
 Raspberry Piの温度、CPU使用率、動作周波数をグラフ化します。
 日本語の説明は以下のリンクに書いています。ここにある英語の説明は最小限です。
+私の個人的な興味と勉強がてら作ったのでソースは汚いです。
 https://www.thun-techblog.com/index.php/blog/thun-tmchk-explanation/
 
 
@@ -52,7 +53,7 @@ make clean
 ```
 # Uninstall
 ```
-sudo rm /url/local/bin/tmchk
+sudo rm /usr/local/bin/tmchk
 ```
 If you installed gnuplot with tmchk , run below command.
 ```
